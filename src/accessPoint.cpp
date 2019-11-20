@@ -232,20 +232,16 @@ void AccessPoint_Setup(){
     Serial.println(WiFi.softAPIP()); 
     Serial.print("Direccion MAC Access Point: ");                   //Imprime la dirección MAC
     Serial.println(WiFi.softAPmacAddress());
-    client = server.available();
-    while(!client);
-    Serial.println("nuevo cliente");
-
 }
 
 Action_Type AccessPoint_CheckClientPetition(){
   Action_Type returnStatement = INIT;
-  /*client = server.available();
+  client = server.available();
   if (!client) {
     return returnStatement;
-  }*/
+  }
   // Espera hasta que el cliente envía alguna petición
- // Serial.println("nuevo cliente");
+  Serial.println("nuevo cliente");
   while (!client.available()) {
     delay(1);
   }
@@ -358,8 +354,6 @@ Action_Type AccessPoint_CheckClientPetition(){
   
   return returnStatement;
 }
-
-
 
 
 void AccessPoint_Flush(){
