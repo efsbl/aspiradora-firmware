@@ -4,13 +4,15 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 
+extern unsigned char runMode;
+
 enum Action_Type {
     INIT,
     AVANZAR,
     RETROCEDER,
     DETENER,
     GIRARIZQ,
-    GIRARDER,
+    GIRARDER
 };
 
 void AccessPoint_Setup(void);

@@ -69,6 +69,12 @@ String html_1 = R"=====(
       background-color: #50FF50;
       font-size: 120%;
       }
+      #Automatico_button {
+      padding: 10px 10px 10px 10px;
+      width: 100%;
+      background-color: #50FF50;
+      font-size: 120%;
+      }
     </style>
 <script>
   function switchAdelante() 
@@ -146,6 +152,21 @@ String html_1 = R"=====(
       ajaxLoad('IZQOFF');
     }
   }
+
+  function switchAutomatico() 
+  {
+    var button_text = document.getElementById("Automatico_button").value;
+    if (button_text=="AAutomatico")
+    {
+      document.getElementById("Automatico_button").value = "AManual";
+      ajaxLoad('AutoON'); 
+    }
+    else
+    {
+      document.getElementById("Automatico_button").value = "AAutomatico";
+      ajaxLoad('AutoOFF');
+    }
+  }
   
   var ajaxRequest = null;
   if (window.XMLHttpRequest)  { ajaxRequest =new XMLHttpRequest(); }
@@ -186,6 +207,9 @@ String html_1 = R"=====(
     <br><br><br>
     <br><br><br>
     <input type="button" id = "Relay_button" onclick="switchRelay()" value="Aspirar"/> 
+    <br><br><br>
+    <br><br><br>
+    <input type="button" id = "Automatico_button" onclick="switchAutomatico()" value="AAutomatico"/> 
     )=====";
     String html_4 = R"=====(    
   </div>
@@ -207,19 +231,21 @@ void AccessPoint_Setup(){
     Serial.print("Direccion IP Access Point - por defecto: ");      //Imprime la dirección IP
     Serial.println(WiFi.softAPIP()); 
     Serial.print("Direccion MAC Access Point: ");                   //Imprime la dirección MAC
-    Serial.println(WiFi.softAPmacAddress()); 
-        
+    Serial.println(WiFi.softAPmacAddress());
+    client = server.available();
+    while(!client);
+    Serial.println("nuevo cliente");
+
 }
 
 Action_Type AccessPoint_CheckClientPetition(){
   Action_Type returnStatement = INIT;
-  client = server.available();
+  /*client = server.available();
   if (!client) {
     return returnStatement;
-  }
-    
+  }*/
   // Espera hasta que el cliente envía alguna petición
-  Serial.println("nuevo cliente");
+ // Serial.println("nuevo cliente");
   while (!client.available()) {
     delay(1);
   }
@@ -320,8 +346,21 @@ Action_Type AccessPoint_CheckClientPetition(){
       html_2.replace("Detenerse","Girar izquierda");   
     }
   }
+
+  //-----Boton 6: cambiar de modo-----//
+  if   ( request.indexOf("AutoON") > 0 )  { 
+    runMode = 1;
+  }
+  else if  ( request.indexOf("AutoOFF") > 0 ) { 
+    runMode = 0;
+    returnStatement = INIT;
+  }
+  
   return returnStatement;
 }
+
+
+
 
 void AccessPoint_Flush(){
   client.flush();

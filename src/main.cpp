@@ -2,7 +2,12 @@
 #include <Accesspoint.h>
 #include <Motores.h>
 
+void updateManual(void);
+
 Action_Type ToDoAction;
+
+unsigned char runMode;
+unsigned char printed;
 
 void setup() {
 
@@ -10,14 +15,31 @@ void setup() {
   while(!Serial);
 
   AccessPoint_Setup();
-
   MotoresSetup();
+  runMode = 0; //Modo Manual
+  printed = 0;
 
 }
 
 void loop() {
 
   ToDoAction = AccessPoint_CheckClientPetition();
+  if (runMode == 1 ){
+    //update fsm automatico
+    if (!printed){
+      Serial.println("Estamos en modo automático.");
+      printed = 1;
+    }
+  }else{
+    if (printed){
+      printed = 0;
+    }
+    updateManual();
+  }
+
+}
+
+void updateManual(){
   switch (ToDoAction)
   {
   case AVANZAR:
@@ -39,5 +61,4 @@ void loop() {
     break;
   }
   AccessPoint_Flush();
-
 }
