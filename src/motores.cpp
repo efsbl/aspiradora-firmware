@@ -29,14 +29,14 @@ void MoverAtras(){
   
 }
 
-void GirarDerecha(){
+void GirarIzquierda(){
   digitalWrite (PinIN1, HIGH);
   digitalWrite (PinIN2, LOW);
   digitalWrite (PinIN3, LOW);
   digitalWrite (PinIN4, HIGH);
 }
 
-void GirarIzquierda(){
+void GirarDerecha(){
   digitalWrite (PinIN1, LOW);
   digitalWrite (PinIN2, HIGH);
   digitalWrite (PinIN3, HIGH);

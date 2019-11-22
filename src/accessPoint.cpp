@@ -274,10 +274,10 @@ Action_Type AccessPoint_CheckClientPetition(){
  
   //----Boton 2: Aspirar-----//
   if  ( request.indexOf("RELAYON") > 0 )  { 
-    //digitalWrite (PinRelay, HIGH);         
+    digitalWrite (PinRelay, HIGH);         
   }
   else if  ( request.indexOf("RELAYOFF") > 0 ) { 
-    //digitalWrite (PinRelay, LOW);
+    digitalWrite (PinRelay, LOW);
   }
   else {
     boolean pinStatus3 = digitalRead(PinRelay);
