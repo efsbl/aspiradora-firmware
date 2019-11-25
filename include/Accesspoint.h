@@ -15,6 +15,7 @@ enum Action_Type {
     GIRARDER
 };
 
+
 void AccessPoint_Setup(void);
 Action_Type AccessPoint_CheckClientPetition(void);
 void AccessPoint_Flush(void);
