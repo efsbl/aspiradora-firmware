@@ -3,6 +3,8 @@
 #include <Motores.h>
 #include <FSM.h>
 #include <Ultrasonico.h>
+#include <Time.h>
+#include <Cuello.h>
 
 void updateManual(void);
 
@@ -19,6 +21,11 @@ void setup() {
   AccessPoint_Setup();
   MotoresSetup();
   Ultrasonico_Setup();
+  SERVO_Setup();
+
+  FSM_Init();
+
+  srand(time(NULL)); //Para invocar random
 
   runMode = 0; //Modo Manual
   printed = 0;
@@ -37,6 +44,7 @@ void loop() {
       printed = 1;
     }*/
   }else{
+    FSM_Init();
     if (printed){
       printed = 0;
     }

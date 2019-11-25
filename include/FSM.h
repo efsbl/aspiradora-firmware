@@ -4,7 +4,10 @@
 #include <Arduino.h>
 #include <Motores.h>
 #include <Ultrasonico.h>
+#include <Time.h>
+#include <Cuello.h>
 
+void FSM_Init(void);
 void FSM_DoState(void);
 void FSM_UpdateState(void);
 
