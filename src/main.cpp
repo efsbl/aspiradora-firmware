@@ -5,6 +5,13 @@
 #include <Ultrasonico.h>
 #include <Time.h>
 #include <Cuello.h>
+#include <Ticker.h>
+
+ICACHE_RAM_ATTR void ISR_UpdateFSM(){
+  FSM_UpdateState();
+}
+Ticker Timer_UpdateFSM(ISR_UpdateFSM, 100); 
+
 
 void updateManual(void);
 
@@ -22,10 +29,9 @@ void setup() {
   MotoresSetup();
   Ultrasonico_Setup();
   SERVO_Setup();
-
   FSM_Init();
 
-  srand(time(NULL)); //Para invocar random
+  srand(time(NULL)); //Para invocar random ?????
 
   runMode = 0; //Modo Manual
   printed = 0;
@@ -33,17 +39,27 @@ void setup() {
 }
 
 void loop() {
-  
   ToDoAction = AccessPoint_CheckClientPetition();
   if (runMode == 1 ){
+
+    //Serial.println("Estamos en modo automático.");
+    if (Timer_UpdateFSM.state() == 0){
+      FSM_Init();
+      Timer_UpdateFSM.start();
+    }
+    else
+      Timer_UpdateFSM.update();
+      
     FSM_DoState();
-    FSM_UpdateState();
-    Serial.println("Estamos en modo automático.");
+
+    //FSM_DoState();
+    //FSM_UpdateState(); //Se deberia actualizar con timer
     /*if (!printed){
       Serial.println("Estamos en modo automático.");
       printed = 1;
     }*/
   }else{
+    Timer_UpdateFSM.stop();
     FSM_Init();
     if (printed){
       printed = 0;

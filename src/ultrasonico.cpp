@@ -28,7 +28,7 @@ char Ultrasonico_Trigger(){
 
 // Calculating the distance
   distance= duration*0.034/2;
-  if (distance < 30)
+  if (distance < 40)
   {
       hayObstaculo = 1;
   }

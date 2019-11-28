@@ -6,6 +6,8 @@
 #include <Ultrasonico.h>
 #include <Time.h>
 #include <Cuello.h>
+#include <Encoder.h>
+#include <Ticker.h>
 
 void FSM_Init(void);
 void FSM_DoState(void);
