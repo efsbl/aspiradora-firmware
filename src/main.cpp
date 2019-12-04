@@ -59,8 +59,10 @@ void loop() {
       printed = 1;
     }*/
   }else{
-    Timer_UpdateFSM.stop();
-    FSM_Init();
+    if (Timer_UpdateFSM.state() == 1){
+      Timer_UpdateFSM.stop();
+      FSM_Init();
+    }
     if (printed){
       printed = 0;
     }

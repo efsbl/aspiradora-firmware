@@ -1,4 +1,6 @@
 #include <FSM.h>
+#define ENCODER_INTERRUPTS_90 19
+#define ENCODER_INTERRUPTS_180 38
 //https://github.com/sstaub/Ticker
 State_Type currentState = OFF;
 State_Type lastState;
@@ -18,16 +20,21 @@ ICACHE_RAM_ATTR void ISR_TimerServo(){
 
 void ISR_TimerEncoder(void);
 char encoderDone;
+int cantidadInterrupciones;
 Ticker Timer_Encoder(ISR_TimerEncoder, 10);
 ICACHE_RAM_ATTR void ISR_TimerEncoder(){
+    cantidadInterrupciones = ENCODER_INTERRUPTS_90;;
+    if (currentState == TURNING_AROUND)
+        cantidadInterrupciones = ENCODER_INTERRUPTS_180;
     int pulses = ENCODER_GetPulses();
-    if (pulses > 36){
+    if (pulses > cantidadInterrupciones){
         encoderDone = 1;
         ENCODER_Stop();
     }
 }
 
 void FSM_Init(){
+    Detener();
     hayObstaculo = 0;
     servoDone = 0;
     motorDone = 0;
@@ -52,14 +59,14 @@ void FSM_DoState(){
 
     case NEED_TO_AVOID:
         Detener();
-        //delay(500);
+        delay(500);
         hayObstaculo = Ultrasonico_Trigger();
         delay(10);
         break;
 
     case AVOIDING:
         Detener();
-        //delay(500);
+        delay(500);
         break;
 
     case LOOKING_RIGHT:
@@ -81,13 +88,6 @@ void FSM_DoState(){
                 servoDone = 1;    
             }
         }
-        /*
-        SERVO_MirarDer();
-        //delay(1000);
-        hayObstaculo = Ultrasonico_Trigger();
-        servoDone = 1;
-        SERVO_MirarCentro();
-        //delay(500);*/
         break;
 
     case LOOKING_LEFT:
@@ -108,17 +108,9 @@ void FSM_DoState(){
                 servoDone = 1;    
             }
         }
-        /*SERVO_MirarIzq();
-        //delay(1000);
-        hayObstaculo = Ultrasonico_Trigger();
-        servoDone = 1;
-        SERVO_MirarCentro();
-        //delay(500);*/
         break;
 
     case TURNING_RIGHT:
-        Serial.print("Estado: ");
-        Serial.println(Timer_Encoder.state());
         if (Timer_Encoder.state() == 0){
             ENCODER_Reset();
             ENCODER_Start();
@@ -136,16 +128,6 @@ void FSM_DoState(){
                 motorDone = 1;
             }
         }
-        /*
-        MoverAtras();
-        //delay(500);
-        Detener();
-        //delay(500);
-        GirarDerecha();
-        //delay(1000);
-        Detener();
-        //delay(500);
-        motorDone = 1;*/
         break;
     case TURNING_LEFT:
         if (Timer_Encoder.state() == 0){
@@ -164,27 +146,26 @@ void FSM_DoState(){
                 motorDone = 1;
             }
         }
-        /*MoverAtras();
-        //delay(500);
-        Detener();
-        //delay(500);
-        GirarIzquierda();
-        //delay(1000);
-        Detener();
-        //delay(500);
-        motorDone = 1;*/
         break;
 
     case TURNING_AROUND:
-        /*MoverAtras();
-        //delay(500);
-        Detener();
-        //delay(500);
-        GirarIzquierda();
-        //delay(1500);
-        Detener();
-        //delay(500);*/
-        motorDone = 1;
+        if (Timer_Encoder.state() == 0){
+            ENCODER_Reset();
+            ENCODER_Start();
+            GirarIzquierda();
+            Timer_Encoder.start();
+        }else{
+            if(!encoderDone && Timer_Encoder.state() == 1){
+                Timer_Encoder.update();
+            }
+            else if(encoderDone){
+                Timer_Encoder.stop();
+                encoderDone = 0;
+                Detener();
+                delay(500);
+                motorDone = 1;
+            }
+        }
         break;
 
     default:

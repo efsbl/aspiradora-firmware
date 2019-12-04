@@ -27,6 +27,7 @@ void MoverAtras(){
    digitalWrite (PinIN3, LOW);
    digitalWrite (PinIN4, HIGH); 
 }
+/*
 void GirarIzquierda(){
   digitalWrite (PinIN1, LOW);
   digitalWrite (PinIN2, LOW);
@@ -36,11 +37,12 @@ void GirarIzquierda(){
 
 void GirarDerecha(){
   digitalWrite (PinIN1, LOW);
-  digitalWrite (PinIN2, LOW);
-  digitalWrite (PinIN3, HIGH);
+  digitalWrite (PinIN2, HIGH);
+  digitalWrite (PinIN3, LOW);
   digitalWrite (PinIN4, LOW); 
 }
-/* GIRAR 2 RUEDAS
+*/
+ //GIRAR 2 RUEDAS
 void GirarIzquierda(){
   digitalWrite (PinIN1, HIGH);
   digitalWrite (PinIN2, LOW);
@@ -53,7 +55,7 @@ void GirarDerecha(){
   digitalWrite (PinIN3, HIGH);
   digitalWrite (PinIN4, LOW); 
 }
-*/
+
 
 
 
