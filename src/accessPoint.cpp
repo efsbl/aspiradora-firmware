@@ -39,42 +39,14 @@ String html_1 = R"=====(
       h2 {
       text-align: center;
       }
-      #Avanzar_button {
+      body input[type=button]
+      {
       padding: 10px 10px 10px 10px;
       width: 100%;
       background-color: #50FF50;
       font-size: 120%;
       }
-      #Relay_button {
-      padding: 10px 10px 10px 10px;
-      width: 100%;
-      background-color: #50FF50;
-      font-size: 120%;
-      }
-      #Retroceder_button {
-      padding: 10px 10px 10px 10px;
-      width: 100%;
-      background-color: #50FF50;
-      font-size: 120%;
-      }
-      #Derecha_button {
-      padding: 10px 10px 10px 10px;
-      width: 100%;
-      background-color: #50FF50;
-      font-size: 120%;
-      }
-      #Izquierda_button {
-      padding: 10px 10px 10px 10px;
-      width: 100%;
-      background-color: #50FF50;
-      font-size: 120%;
-      }
-      #Automatico_button {
-      padding: 10px 10px 10px 10px;
-      width: 100%;
-      background-color: #50FF50;
-      font-size: 120%;
-      }
+
     </style>
 <script>
   function switchAdelante() 
@@ -274,10 +246,10 @@ Action_Type AccessPoint_CheckClientPetition(){
  
   //----Boton 2: Aspirar-----//
   if  ( request.indexOf("RELAYON") > 0 )  { 
-    digitalWrite (PinRelay, HIGH);         
+    returnStatement = ASPIRAR;         
   }
   else if  ( request.indexOf("RELAYOFF") > 0 ) { 
-    digitalWrite (PinRelay, LOW);
+    returnStatement = NOASPIRAR;  
   }
   else {
     boolean pinStatus3 = digitalRead(PinRelay);

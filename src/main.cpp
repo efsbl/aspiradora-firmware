@@ -7,6 +7,8 @@
 #include <Cuello.h>
 #include <Ticker.h>
 
+#define PinRelay 1
+
 ICACHE_RAM_ATTR void ISR_UpdateFSM(){
   FSM_UpdateState();
 }
@@ -35,6 +37,8 @@ void setup() {
 
   runMode = 0; //Modo Manual
   printed = 0;
+
+  digitalWrite (PinRelay, LOW);
 
 }
 
@@ -69,6 +73,8 @@ void loop() {
     updateManual();
   }
 
+ 
+
 }
 
 void updateManual(){
@@ -89,6 +95,12 @@ void updateManual(){
   case DETENER:
     Detener();
     break; 
+  case ASPIRAR:
+    Aspiradora();
+    break;
+  case NOASPIRAR:
+    NoAspiradora();
+    break;
   default: //INIT
     break;
   }

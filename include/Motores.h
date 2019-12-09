@@ -10,5 +10,6 @@ void MoverAtras(void);
 void GirarDerecha(void);
 void GirarIzquierda(void);
 void Detener(void);
-
+void Aspiradora(void);
+void NoAspiradora(void);
 #endif

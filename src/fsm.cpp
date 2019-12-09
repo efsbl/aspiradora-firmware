@@ -41,6 +41,8 @@ void FSM_Init(){
     encoderDone = 0;
     currentState = OFF;
     lastState = OFF;
+    
+    NoAspiradora();
 }
 
 
@@ -49,7 +51,9 @@ void FSM_DoState(){
     {
     case OFF:
         Detener();
+        Aspiradora();
         break;
+        
 
     case MOVING:
         MoverAdelante();
@@ -83,7 +87,7 @@ void FSM_DoState(){
                 hayObstaculo = Ultrasonico_Trigger();
                 delay(10);
                 SERVO_MirarCentro();
-                delay(500);//delay???
+                delay(500);
                 Timer_Encoder.stop();
                 servoDone = 1;    
             }

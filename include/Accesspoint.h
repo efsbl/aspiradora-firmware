@@ -12,7 +12,9 @@ enum Action_Type {
     RETROCEDER,
     DETENER,
     GIRARIZQ,
-    GIRARDER
+    GIRARDER,
+    ASPIRAR,
+    NOASPIRAR
 };
 
 

@@ -10,7 +10,7 @@ void SERVO_Setup(){
 }
 
 void SERVO_MirarDer(){
-    myServo.write(0);
+    myServo.write(10);
 }
 
 void SERVO_MirarIzq(){
