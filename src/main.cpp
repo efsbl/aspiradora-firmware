@@ -9,6 +9,7 @@
 
 #define PinRelay 1
 
+
 ICACHE_RAM_ATTR void ISR_UpdateFSM(){
   FSM_UpdateState();
 }
@@ -56,12 +57,6 @@ void loop() {
       
     FSM_DoState();
 
-    //FSM_DoState();
-    //FSM_UpdateState(); //Se deberia actualizar con timer
-    /*if (!printed){
-      Serial.println("Estamos en modo automático.");
-      printed = 1;
-    }*/
   }else{
     if (Timer_UpdateFSM.state() == 1){
       Timer_UpdateFSM.stop();

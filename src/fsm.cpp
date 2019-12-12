@@ -1,7 +1,11 @@
 #include <FSM.h>
-#define ENCODER_INTERRUPTS_90 19
-#define ENCODER_INTERRUPTS_180 38
+#include <Accesspoint.h>
+#define ENCODER_INTERRUPTS_90 24
+#define ENCODER_INTERRUPTS_180 45
 //https://github.com/sstaub/Ticker
+
+String estado = "";
+
 State_Type currentState = OFF;
 State_Type lastState;
 
@@ -9,11 +13,11 @@ char hayObstaculo;
 char motorDone;
 char servoDone;
 
+
 void ISR_TimerServo(void);
 char servoDoneRoutine;
 Ticker Timer_Servo(ISR_TimerServo, 1500);
 ICACHE_RAM_ATTR void ISR_TimerServo(){
-    //hayObstaculo = Ultrasonico_Trigger();
     servoDoneRoutine = 1;
 }
 
@@ -26,10 +30,10 @@ ICACHE_RAM_ATTR void ISR_TimerEncoder(){
     cantidadInterrupciones = ENCODER_INTERRUPTS_90;;
     if (currentState == TURNING_AROUND)
         cantidadInterrupciones = ENCODER_INTERRUPTS_180;
-    int pulses = ENCODER_GetPulses();
-    if (pulses > cantidadInterrupciones){
+    //int pulses = ENCODER_GetPulses();
+    if (ENCODER_GetPulses() > cantidadInterrupciones){
         encoderDone = 1;
-        ENCODER_Stop();
+        //ENCODER_Stop();
     }
 }
 
@@ -50,30 +54,35 @@ void FSM_DoState(){
     switch (currentState)
     {
     case OFF:
+        estado = "OFF";
         Detener();
         Aspiradora();
         break;
         
 
     case MOVING:
+        estado = "MOVING";
         MoverAdelante();
         hayObstaculo = Ultrasonico_Trigger();
         delay(10);
         break; 
 
     case NEED_TO_AVOID:
+        estado = "NEED_TO_AVOID";
         Detener();
-        delay(500);
+        delay(200);
         hayObstaculo = Ultrasonico_Trigger();
         delay(10);
         break;
 
     case AVOIDING:
+        estado = "AVOIDING";
         Detener();
-        delay(500);
+        //delay(500);
         break;
 
     case LOOKING_RIGHT:
+        estado = "LOOKING_RIGHT";
         if (Timer_Servo.state() == 0){
             SERVO_MirarDer();
             servoDoneRoutine = 0;
@@ -87,14 +96,14 @@ void FSM_DoState(){
                 hayObstaculo = Ultrasonico_Trigger();
                 delay(10);
                 SERVO_MirarCentro();
-                delay(500);
-                Timer_Encoder.stop();
+                delay(200);
                 servoDone = 1;    
             }
         }
         break;
 
     case LOOKING_LEFT:
+        estado = "LOOKING_LEFT";
         if (Timer_Servo.state() == 0){
             SERVO_MirarIzq();
             servoDoneRoutine = 0;
@@ -108,16 +117,18 @@ void FSM_DoState(){
                 hayObstaculo = Ultrasonico_Trigger();
                 delay(10);
                 SERVO_MirarCentro();
-                delay(500);
+                delay(200);
                 servoDone = 1;    
             }
         }
         break;
 
     case TURNING_RIGHT:
+        estado = "TURNING_RIGHT";
         if (Timer_Encoder.state() == 0){
             ENCODER_Reset();
             ENCODER_Start();
+            delay(10);
             GirarDerecha();
             Timer_Encoder.start();
         }else{
@@ -126,17 +137,20 @@ void FSM_DoState(){
             }
             else if(encoderDone){
                 Timer_Encoder.stop();
+                ENCODER_Stop();
                 encoderDone = 0;
                 Detener();
-                delay(500);
+                delay(200);
                 motorDone = 1;
             }
         }
         break;
     case TURNING_LEFT:
+        estado = "TURNING_LEFT";
         if (Timer_Encoder.state() == 0){
             ENCODER_Reset();
             ENCODER_Start();
+            delay(10);
             GirarIzquierda();
             Timer_Encoder.start();
         }else{
@@ -144,18 +158,21 @@ void FSM_DoState(){
                 Timer_Encoder.update();
             else if(encoderDone){
                 Timer_Encoder.stop();
+                ENCODER_Stop();
                 encoderDone = 0;
                 Detener();
-                delay(500);
+                delay(200);
                 motorDone = 1;
             }
         }
         break;
 
     case TURNING_AROUND:
+        estado = "TURNING_AROUND";
         if (Timer_Encoder.state() == 0){
             ENCODER_Reset();
             ENCODER_Start();
+            delay(10);
             GirarIzquierda();
             Timer_Encoder.start();
         }else{
@@ -164,9 +181,10 @@ void FSM_DoState(){
             }
             else if(encoderDone){
                 Timer_Encoder.stop();
+                ENCODER_Stop();
                 encoderDone = 0;
                 Detener();
-                delay(500);
+                delay(200);
                 motorDone = 1;
             }
         }
@@ -178,6 +196,7 @@ void FSM_DoState(){
 }
 
 void FSM_UpdateState(){
+    //AccessPoint_Flush();
     switch (currentState)
     {
     case OFF:

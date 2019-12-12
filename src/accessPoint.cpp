@@ -1,5 +1,7 @@
 #include <Accesspoint.h>
 
+extern String estado;
+
 //Pines de los motores
 int PinIN1 = 5;
 int PinIN2 = 4;
@@ -168,22 +170,22 @@ String html_1 = R"=====(
     <h2>TDPII - Robot Aspiradora</h2>
     )====="; 
     String html_2 = R"=====(  
-    <input type="button" id = "Avanzar_button" onclick="switchAdelante()" value="Avanzar"/> 
-    <br><br>
+    <input type="button" id = "Avanzar_button" onclick="switchAdelante()" value="Avanzar"/>
     <br><br>
     <input type="button" id = "Izquierda_button" onclick="switchIzquierda()" value="Girar izquierda" /> 
     <input type="button" id = "Derecha_button" onclick="switchDerecha()" value="Girar derecha" />  
     <br><br>
-    <br><br>
     <input type="button" id = "Retroceder_button" onclick="switchAtras()" value="Retroceder"/> 
-    <br><br><br>
     <br><br><br>
     <input type="button" id = "Relay_button" onclick="switchRelay()" value="Aspirar"/> 
     <br><br><br>
+    )=====";
+    String html_3 = R"=====( 
+    <div>
+      Log: <span id="CurrentState">)=====";String html_4 = R"=====(</span>
+	  </div>
     <br><br><br>
     <input type="button" id = "Automatico_button" onclick="switchAutomatico()" value="AAutomatico"/> 
-    )=====";
-    String html_4 = R"=====(    
   </div>
 </body>
 </html>
@@ -199,7 +201,7 @@ void AccessPoint_Setup(){
     server.begin();                      
     WiFi.mode(WIFI_AP);
     WiFi.softAP(ssid); 
-    Serial.println();
+    Serial.println("");
     Serial.print("Direccion IP Access Point - por defecto: ");      //Imprime la dirección IP
     Serial.println(WiFi.softAPIP()); 
     Serial.print("Direccion MAC Access Point: ");                   //Imprime la dirección MAC
@@ -332,8 +334,8 @@ void AccessPoint_Flush(){
   client.flush();
   client.print( header );
   client.print( html_1 );   
-  client.print( html_2 ); 
-  client.print( html_4 ); 
+  client.print( html_2 );
+  String html_aux = html_3 + estado + html_4; 
+  client.print( html_aux ); 
   delay(5);
 }
-

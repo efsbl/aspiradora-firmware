@@ -6,6 +6,7 @@
 
 extern unsigned char runMode;
 
+
 enum Action_Type {
     INIT,
     AVANZAR,
